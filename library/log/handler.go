@@ -104,7 +104,7 @@ func (hs Handlers) Log(ctx context.Context, lv Level, d ...D) {
 			}
 		}
 		fn := funcName(3 + funcSkip)
-		errIncr(lv, fn)
+		//errIncr(lv, fn)
 		d = append(d, KVString(_source, fn))
 	}
 	for _, h := range hs.handlers {
