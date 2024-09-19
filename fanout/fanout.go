@@ -1,7 +1,7 @@
 package fanout
 
 import (
-	xcontext "b-common/library/context"
+	xcontext "MagicWand/library/context"
 	"context"
 	"errors"
 	"fmt"
