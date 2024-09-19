@@ -1,3 +1,3 @@
-module b-common
+module MagicWand
 
 go 1.23.0
