@@ -2,6 +2,7 @@ package fanout
 
 import (
 	xcontext "MagicWand/library/context"
+	"MagicWand/library/log"
 	"context"
 	"errors"
 	"fmt"
@@ -110,7 +111,6 @@ func newFanout(name string, opts *Options) FanoutHandler {
 	for i := 0; i < opts.worker; i++ {
 		go c.proc()
 	}
-	_metricChanCap.Set(float64(opts.buffer), name)
 	return c
 }
 
@@ -122,8 +122,6 @@ func (c *fanout) proc() {
 			return
 		}
 		wrapFunc(t.f)(t.ctx)
-		_metricChanSize.Set(float64(len(c.ch)), c.name)
-		_metricCount.Inc(c.name)
 	}
 }
 
@@ -134,7 +132,7 @@ func wrapFunc(f func(c context.Context)) (res func(context.Context)) {
 				buf := make([]byte, 64*1024)
 				buf = buf[:runtime.Stack(buf, false)]
 				fmt.Fprintf(os.Stderr, "fanout: panic recovered: %s\n%s\n", r, buf)
-				log.Errorc(ctx, "panic in fanout proc, err: %s, stack: %s", r, buf)
+				log.Errorc("panic in fanout proc, err: %s, stack: %s", r, buf)
 			}
 		}()
 		f(ctx)
